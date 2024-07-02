@@ -1,0 +1,238 @@
+
+
+{% include 'include_assets/styles.html' %}
+
+</head>
+{% if session.loggedin %}
+<body>
+    <div id="global-loader">
+        <div class="whirly-loader">AutoDlex<i class="fa fa-camera" aria-hidden="true"></i></div>
+    </div>
+    
+    <div class="main-wrapper">
+
+         {% include 'include_assets/profile.html'%}
+
+         <div class="sidebar" id="sidebar" style="background-color:  white;">
+            <div class="sidebar-inner slimscroll" >
+                <div id="sidebar-menu" class="sidebar-menu">
+                    <div class="dashboard-logo">
+                        <a href="{{url_for('index')}}">
+                            <img src="static/images/autodlex.png" alt="" style="width: 200px; height: auto; margin-bottom: 80px;">
+                        </a>
+                    </div>
+                    <ul >
+                        <li >
+                            <a href="{{ url_for('index') }}"><span class="fa fa-home"></span><span>
+                                    Dashboard</span> </a>
+                        </li>
+                             <li >
+                            <a href="{{ url_for('violators.violator_list') }}">
+                                <span class="fa fa-user-alt"></span>
+                                <span> Violator List</span>
+                            </a>
+                        </li>
+                        <li class="active" >
+                        <a href="{{ url_for('enforcer.enforcer_data') }}">
+                            <span class="fa fa-user-alt"></span>
+                                <span> Enforcers</span>
+                            </a>
+                        </li>
+                        <li >
+                        <a href="{{ url_for('settled_reports') }}">
+                            <span class="fas fa-exclamation-circle"></span>
+                                <span  > Settled Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-wrapper">
+            <div class="content">
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="{{ url_for('enforcer.enforcer_data') }}">Enforcer Management</a></li>
+                      <li class="breadcrumb-item active" aria-current="page">View Enforcers Data</li>
+                    </ol>
+                  </nav>
+
+                <div class="card" style="box-shadow:2px 5px 7px rgba(0, 0, 0, 0.3);" >
+                    <div class="card-body">
+                        <div class="profile-set">
+                            <div class="profile-head">
+                            </div>
+                            <div class="profile-top">
+                                <div class="profile-content">
+                                    <div class="profile-contentimg">
+                                        <img src="static\enforcer_profiles\{{enforcer_data.8}}" alt="img" id="blah" class="profile-img-square">
+                                    </div>
+                                    <div class="profile-contentname">
+                                        <h2>{{enforcer_data.6}} {{enforcer_data.7}}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                    
+                        {% if msg %}
+                        <div class="alert alert-success">
+                            <strong>{{msg}}</strong>
+                        </div>
+                        {% endif %} 
+                        <form action="{{ url_for('enforcer.edit_enforcer', enforcer_id=enforcer_data.0) }}" method="POST" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label><a style="color: red;">* </a>First Name</label>
+                                        <input type="text" name="first_name" value="{{ enforcer_data.6 }}" required pattern="[a-zA-Z0-9]\S*.*" oninvalid="this.setCustomValidity('Name should not start with a space')" oninput="setCustomValidity('')"  maxlength="25">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label><a style="color: red;">* </a>Last Name</label>
+                                        <input type="text" class="form-control" name="last_name" value="{{ enforcer_data.7 }}" required pattern="[a-zA-Z0-9]\S*.*" oninvalid="this.setCustomValidity('Last name should not start with a space')" oninput="setCustomValidity('')"  maxlength="25">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label><a style="color: red;">* </a>Email</label>
+                                        <input class="form-control" type="email" name="email" value="{{ enforcer_data.5 }}"  required pattern="^(?!.*\.c0m).*$" maxlength="255">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label><a style="color: red;">* </a>Username</label>
+                                        <input type="text" name="username" value="{{ enforcer_data.3 }}"  required pattern="[a-zA-Z0-9]\S*.*" oninvalid="this.setCustomValidity('Username should not start with a space')" oninput="setCustomValidity('')" maxlength="10">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-12" style="display: none;">
+                                    <div class="form-group">
+                                        <label><a style="color: red;">* </a>Username</label>
+                                        <input type="text" name="profile_image" value="{{ enforcer_data.8 }}" >
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label><a style="color: red;">* </a>Password</label>
+                                        <div class="pass-group">
+                                            <input name="password" id="password" type="password"  value="{{ enforcer_data.4 }}" maxlength="11" minlength="7"  required>
+                                            {% if enforcer_data.4 %}
+                                            <span id="togglePassword" class="eye-icon">
+                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label><a style="color: red;">* </a>Barangay</label>
+                                        <select name="assigned_location" id="inputBarangay" class="form-control" required>
+                                            <option value="" disabled>Choose Barangay</option>
+                                            <option value="Balibago" {% if enforcer_data.9 == "Balibago" %} selected {% endif %}>Balibago</option>
+                                            <option value="Caingin" {% if enforcer_data.9 == "Caingin" %} selected {% endif %}>Caingin</option>
+                                            <option value="Dila" {% if enforcer_data.9 == "Dila" %} selected {% endif %}>Dila</option>
+                                            <option value="Dita" {% if enforcer_data.9 == "Dita" %} selected {% endif %}>Dita</option>
+                                            <option value="Don Jose" {% if enforcer_data.9 == "Don Jose" %} selected {% endif %}>Don Jose</option>
+                                            <option value="Ibaba" {% if enforcer_data.9 == "Ibaba" %} selected {% endif %}>Ibaba</option>
+                                            <option value="Kanluran" {% if enforcer_data.9 == "Kanluran" %} selected {% endif %}>Kanluran</option>
+                                            <option value="Labas" {% if enforcer_data.9 == "Labas" %} selected {% endif %}>Labas</option>
+                                            <option value="Macabling" {% if enforcer_data.9 == "Macabling" %} selected {% endif %}>Macabling</option>
+                                            <option value="Malitlit" {% if enforcer_data.9 == "Malitlit" %} selected {% endif %}>Malitlit</option>
+                                            <option value="Market Area" {% if enforcer_data.9 == "Market Area" %} selected {% endif %}>Market Area</option>
+                                            <option value="Poblacion" {% if enforcer_data.9 == "Poblacion" %} selected {% endif %}>Poblacion</option>
+                                            <option value="Santo Domingo" {% if enforcer_data.9 == "Santo Domingo" %} selected {% endif %}>Santo Domingo</option>
+                                            <option value="Sinalhan" {% if enforcer_data.9 == "Sinalhan" %} selected {% endif %}>Sinalhan</option>
+                                            <option value="Tagapo" {% if enforcer_data.9 == "Tagapo" %} selected {% endif %}>Tagapo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                       
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-submit me-2">Update</button>
+                                    <a href="{{ url_for('enforcer.enforcer_data') }}" class="btn btn-cancel">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                        
+                     </div>
+                </div>
+
+            </div>
+        </div>
+  
+         
+                
+  </div>
+    {% include 'include_assets/script.html' %}
+
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const passwordField = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+    
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function () {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+        }
+    });
+    </script>
+    <style>
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        </style>  
+        
+    
+        <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+        <!-- Include other JavaScript files -->
+        <script>
+            $(document).ready(function() {
+                // Store the initial form state
+                var initialFormState = $('form').serialize();
+            
+                // Function to show confirmation dialog when leaving the page
+                function beforeUnloadHandler(e) {
+                    // If the current form state is different from the initial state
+                    var currentFormState = $('form').serialize();
+                    if (currentFormState !== initialFormState) {
+                        // Customize the confirmation message
+                        var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave this page?';
+                        
+                        // For all browsers except Microsoft Edge
+                        e.returnValue = confirmationMessage;
+                        return confirmationMessage;
+                    }
+                }
+            
+                window.addEventListener('beforeunload', beforeUnloadHandler);
+            
+                // Function to remove event listener when submitting the form
+                $('form').submit(function() {
+                    // Remove the beforeunload event listener
+                    window.removeEventListener('beforeunload', beforeUnloadHandler);
+                });
+            });
+        </script>
+
+
+{% else %}
+        <script>
+            
+
+        window.onload = function() {
+            window.location.href = "{{ url_for('admin_signin') }}";
+        }
+    </script>
+        {% endif %}
+
+
+</html>

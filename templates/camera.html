@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Capture and Text Extraction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.jpg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index-css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index-css/animate.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index-css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/fontawesome/css/fontawesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index-css/style.css') }}">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body >
+    <div id="global-loader">
+        <div class="whirly-loader">AutoDlex<i class="fa fa-camera" aria-hidden="true"></i></div>
+    </div>
+    <div class="contentarea">
+        {% if session.loggedins %}
+        <div style="background-color:#2578F4 ;" class="header d-flex justify-content-end">
+            <ul class="nav" style="margin-top:-20px">
+                <li class="nav-item dropdown has-arrow main-drop">
+                    <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
+                        <span class="user-img"><img src="static/img/profiles/avator1.jpg" alt="">
+                    </a>
+                    <div class="dropdown-menu menu-drop-user">
+                        <div class="profilename">
+                            <div class="profileset">
+                                <span class="user-img"><img src="static/img/profiles/avator1.jpg" alt="">
+                                    <span class="status online"></span></span>
+                                <div class="profilesets">
+                                    <h6>{{ username }}</h6>
+                                    <h5>Enforcer</h5>
+                                </div>
+                            </div>
+                            <hr class="m-0">
+                            <a class="dropdown-item logout pb-0" href="{{ url_for('logout') }}"><img
+                                    src="static/img/icons/log-out.svg" class="me-2" alt="img">Logout</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <form action="{{ url_for('svm.violators') }}" method="post" enctype="multipart/form-data">
+            
+            <h1 style="margin-top: 90px; margin-bottom:4px;">Scan License with Camera</h1>
+            <div class="container">
+              
+            </div>
+            
+            <div class="camera">
+                <video id="video">Video stream not available.</video>
+                <img id="capturedImage" class="capturedImage" src="" alt="Captured Image">
+            </div>
+            <div>
+                <button id="showModalButton" type="button">Show Extracted Data</button>
+                <button id="startbutton">
+                    <img src="{{ url_for('static', filename='images/camera-svgrepo-com.png') }}" alt="Camera Icon">
+                </button>
+            </div>
+            <input style="display:none" type="text" name="tct_number" value="test_tct">
+            <input style="display:none" type="text" name="name" value="test_name">
+            <input style="display:none" type="text" name="license_number" value="test_licenseNumber">
+            <input style="display:none" id="extracted_text" name="extracted_text">
+            <input style="display:none" id="image_data" name="image_data">
+            <input style="display:none" type="text" name="username" value="{{username}}">
+            <canvas id="canvas"></canvas>
+            <div  style="display:none" id="extractedText"></div>
+            <div id="warningMessage"></div>
+            <div id="space-between" style="font-size: 20px;">
+                <button id="retakebutton" name="retakebutton">Retake</button>
+                <button id="submit" name="submit">Continue (step 1 of 2) </button>
+            </div>
+        </form>
+        {% if msg %}
+        <script>
+        swal({
+            title: "Success",
+            text: "{{ msg }}",
+            icon: "success",
+            button: "OK",
+        });
+        </script>
+        {% endif %}
+        {% else %}
+        <script>
+        window.onload = function() {
+            window.location.href = "{{ url_for('enforcer.enforcer') }}";
+        }
+        </script>
+        {% endif %}
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="captureModal" tabindex="-1" aria-labelledby="captureModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="captureModalLabel">Captured Driver's License</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalCapturedImage" src="" alt="Captured Image" style="width: 100%;">
+                    <div id="modalExtractedText"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='javascript/camera.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/apexchart/apexcharts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/apexchart/chart-data.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        document.getElementById("submit").addEventListener("click", function() {
+            var capturedImage = document.getElementById("capturedImage").src;
+            var extractedText = document.getElementById("extractedText").innerHTML;
+            document.getElementById("extracted_text").value = extractedText;
+            document.getElementById("image_data").value = capturedImage;
+        });
+
+        // Show Modal button click event
+        document.getElementById("showModalButton").addEventListener("click", function() {
+            // Display the modal with the captured image and extracted text
+            var capturedImage = document.getElementById("capturedImage").src;
+            var extractedText = document.getElementById("extractedText").innerHTML;
+            document.getElementById("modalCapturedImage").src = capturedImage;
+            document.getElementById("modalExtractedText").innerHTML = extractedText;
+            var captureModal = new bootstrap.Modal(document.getElementById('captureModal'));
+            captureModal.show();
+        });
+
+        // Confirm capture button click event in the modal
+        document.getElementById("confirmCapture").addEventListener("click", function() {
+            var capturedImage = document.getElementById("capturedImage").src;
+            var extractedText = document.getElementById("extractedText").innerHTML;
+            document.getElementById("extracted_text").value = extractedText;
+            document.getElementById("image_data").value = capturedImage;
+            var captureModal = bootstrap.Modal.getInstance(document.getElementById('captureModal'));
+            captureModal.hide();
+        });
+    </script>
+
+
+</body>
+</html>

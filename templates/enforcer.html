@@ -1,0 +1,134 @@
+
+
+{% include 'include_assets/styles.html' %}
+
+</head>
+{% if session.loggedin %}
+<body>
+    <div id="global-loader">
+        <div class="whirly-loader">AutoDlex<i class="fa fa-camera" aria-hidden="true"></i></div>
+    </div>
+    
+
+    <div class="main-wrapper">
+
+         {% include 'include_assets/profile.html'%}
+
+         <div class="sidebar" id="sidebar" style="background-color:  white;">
+            <div class="sidebar-inner slimscroll" >
+                <div id="sidebar-menu" class="sidebar-menu">
+                    <div class="dashboard-logo">
+                        <a href="{{url_for('index')}}">
+                            <img src="static/images/autodlex.png" alt="" style="width: 200px; height: auto; margin-bottom: 80px;">
+                        </a>
+                    </div>
+                    <ul >
+                        <li >
+                            <a href="{{ url_for('index') }}"><span class="fa fa-home"></span><span>
+                                    Dashboard</span> </a>
+                        </li>
+                             <li >
+                            <a href="{{ url_for('violators.violator_list') }}">
+                                <span class="fa fa-user-alt"></span>
+                                <span> Violator List</span>
+                            </a>
+                        </li>
+                        <li class="active" >
+                        <a href="{{ url_for('enforcer.enforcer_data') }}">
+                            <span class="fa fa-user-alt"></span>
+                                <span> Enforcers</span>
+                            </a>
+                        </li>
+                        <li >
+                        <a href="{{ url_for('settled_reports') }}">
+                            <span class="fas fa-exclamation-circle"></span>
+                                <span  > Settled Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="page-wrapper">
+            <div class="content">
+            
+            <section class="comp-section comp-cards">
+                      
+                       
+                        {% if enforcer_data == []%}
+                        <div class="row">
+                            <img src="static/images/empty.svg" alt="img"  style="width: 200px; height: auto; margin: 0 auto; margin-top:50px">
+                            <span class="d-flex justify-content-center mt-2">You have not added any enforcers.  </span>
+                            <span class="d-flex justify-content-center mb-4">Click the button to add enforcers. </span>
+                            
+                            <div class="d-flex justify-content-center">
+                                <a href="{{ url_for('add_enforcer') }}" class="btn btn-info" >+ Add Enforcer</a>
+                            </div>
+                           
+                            {% else %}
+                            <div class="page-header">
+                                <div class="page-title">
+                                    <h4>Enforcer Management</h4>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mb-4">
+                                <a href="{{ url_for('add_enforcer') }}" class="btn btn-info">+ Add Enforcer</a>
+                            </div>
+                            <div class="content-body" >
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        {% for data in enforcer_data %}
+                                        <div class="col-xl-3 col-xxl-4 col-lg-4 col-md-6 col-sm-6" >
+                                            <div class="card"style="box-shadow:2px 5px 7px rgba(0, 0, 0, 0.3);" > <!-- Adjust the height as needed -->
+                                                <img class="img-fluid" src="static\enforcer_profiles\{{data.8}}" style="height: 250px;" alt="">
+                                                <div class="card-body">
+                                                    <ul class="list-group mb-3 list-group-flush">
+                                                        <li class="list-group-item px-0 border-top-0 d-flex justify-content-between">
+                                                            <span class="mb-0 "> <B>Username:</B>  <b>{{data.3}} </b></span>
+                                                            <a href="javascript:void(0);"><i class="la la-heart-o mr-1"></i><strong></strong></a>
+                                                        </li>
+                                                        <li class="list-group-item px-0 d-flex justify-content-between">
+                                                            <span class="mb-0"><b>Assigned Location : </b>{{data.9}}</span><strong></strong>
+                                                        </li>
+                                                        <li class="list-group-item px-0 d-flex justify-content-between">
+                                                            <span class="mb-0"><b>Name : </b>{{data.6}}</span><strong></strong>
+                                                        </li>
+                                                        <li class="list-group-item px-0 border-top-0 d-flex justify-content-between">
+                                                        </li>
+                                                    </ul>
+                                                    <a href="{{ url_for('enforcer.view_enforcer', enforcer_id=data.0) }}" class="btn btn-primary d-flex justify-content-center">View</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                          
+                            {% endif %}
+                        </div>
+                        
+                </section>
+            </div>
+        </div>
+        
+    </div>
+
+    {% else %}
+    <script>
+        
+
+    window.onload = function() {
+        window.location.href = "{{ url_for('admin_signin') }}";
+    }
+</script>
+    {% endif %}
+   
+
+    {% include 'include_assets/script.html' %}
+
+</body>
+
+</html>

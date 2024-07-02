@@ -1,0 +1,269 @@
+<!-- Head section and styles include -->
+{% include 'include_assets/styles.html' %}
+</head>
+
+<!-- Body section -->
+{% if session.loggedin %}
+<body>
+    <div id="global-loader">
+        <div class="whirly-loader">AutoDlex<i class="fa fa-camera" aria-hidden="true"></i></div>
+    </div>
+
+    <div class="main-wrapper">
+        <!-- Include profile section -->
+        {% include 'include_assets/profile.html' %}
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar" style="background-color:  white;">
+            <div class="sidebar-inner slimscroll">
+                <div id="sidebar-menu" class="sidebar-menu">
+                    <div class="dashboard-logo">
+                        <a href="{{url_for('index')}}">
+                            <img src="static/images/autodlex.png" alt="" style="width: 200px; height: auto; margin-bottom: 80px;">
+                        </a>
+                    </div>
+                    <ul>
+                        <li>
+                            <a href="{{ url_for('index') }}"><span class="fa fa-home"></span><span> Dashboard</span> </a>
+                        </li>
+                        <li class="active">
+                            <a href="{{ url_for('violators.violator_list') }}">
+                                <span class="fa fa-user-alt"></span>
+                                <span> Violators List</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('enforcer.enforcer_data') }}">
+                                <span class="fa fa-user-alt"></span>
+                                <span> Enforcers</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('settled_reports') }}">
+                                <span class="fas fa-exclamation-circle"></span>
+                                <span> Settled Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page content wrapper -->
+        <div class="page-wrapper">
+            <div class="content">
+                <!-- Page header -->
+                <div class="page-header">
+                    <div class="page-title">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ url_for('violators.violator_list') }}">Violator List</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Violator Details</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Main content row -->
+                <div class="row">
+                    <!-- Column for image -->
+                    <div class="col-lg-4 col-sm-12">
+                        <div class="card" style="box-shadow: 2px 5px 7px rgba(0, 0, 0, 0.3);">
+                            <div class="card-body">
+                                <div class="">
+                                    <div class="owl-theme">
+                                        <div class="product centered-content">
+                                            <h2 style="text-align:center; margin-top: 9px; margin-bottom: 24px;">Captured Image</h2>
+                                            <img src="static/extracted_images/{{extracted_data.8}}"  width="229" height="160">
+                                            <button id="viewImage" class="btn btn-primary" style="margin-top: 10px; width: 100%;">View Full Image</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <style>
+                        .centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+                    </style>
+                    
+                    <!-- The Modal -->
+                    <div id="myModal" class="modal">
+                        <span class="close">&times;</span>
+                        <img class="modal-content" id="img01">
+                        <div id="caption"></div>
+                    </div>
+
+                    <!-- Column for details -->
+                    <div class="col-lg-8 col-sm-20">
+                        <div class="card" style="box-shadow:2px 5px 7px rgba(0, 0, 0, 0.3);">
+                            <div class="card-body">
+                                <div class="productdetails ">
+                                    <h5 class="mb-3"> Apprehension Data </h5>
+                                    <ul class="product-bar" style="height: 310px;">
+                                       
+                                        <li >
+                                            <h4>Plate Number</h4>
+                                            <h6 style="color:Red">{{violator_data.8}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Time</h4>
+                                            <h6 style="color:Red">{{violator_data.5}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Date</h4>
+                                            <h6 style="color:Red">{{violator_data.6}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Vehicle</h4>
+                                            <h6 style="color:Red">{{violator_data.9}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Violation</h4>
+                                            <h6 style="color:Red">{{violator_data.4}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Barangay</h4>
+                                            <h6 style="color:Red">{{violator_data.7}}</h6>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column for extracted data -->
+                   
+
+                </div> <!-- End of main content row -->
+                <div class="col-lg-432 col-sm-12" style="box-shadow:2px 5px 7px rgba(0, 0, 0, 0.3);">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="productdetails">
+                                <h5 class="mb-3"> Extracted Data from the license</h5>
+                                <ul class="product-bar">
+                                    <li>
+                                        <h4>Name</h4>
+                                        <h6 style="color:Red">{{extracted_data.3}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>License Number</h4>
+                                        <h6 style="color:Red">{{extracted_data.4}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Expiration Date</h4>
+                                        <h6 style="color:Red">{{extracted_data.5}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Date of Birth</h4>
+                                        <h6 style="color:Red">{{extracted_data.6}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Gender</h4>
+                                        <h6 style="color:Red">{{extracted_data.7}}</h6>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div> <!-- End of content div -->
+        </div> <!-- End of page-wrapper div -->
+
+        <!-- Modal styles -->
+        <style>
+            .modal {
+                display: none; /* Hidden by default */
+                position: center; /* Stay in place */
+                z-index: 9999; /* Sit on top */
+                padding-top: 100px; /* Location of the box */
+                left: 0;
+                top: 0;
+                width: 100%; /* Full width */
+                height: 100%; /* Full height */
+                overflow: auto; /* Enable scroll if needed */
+                background-color: rgb(0, 0, 0); /* Fallback color */
+                background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
+            }
+
+            .modal-content {
+                margin: auto;
+                display: block;
+                width: 45%;
+                max-width: 700px;
+            }
+
+            .close {
+                position: absolute;
+                top: 15px;
+                right: 35px;
+                color: #f1f1f1;
+                font-size: 40px;
+                font-weight: bold;
+                transition: 0.3s;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: #bbb;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            #viewImage { 
+                top: 10px;
+                right: 10px;
+                color:black;
+            }
+
+            #viewImage:hover {
+                color: white;
+            }
+        </style>
+
+        <!-- Modal JavaScript -->
+        <script>
+            // JavaScript to show modal on eye icon click
+            var modal = document.getElementById('myModal');
+            var img = document.getElementById('imageModalTrigger');
+            var modalImg = document.getElementById("img01");
+            var viewImage = document.getElementById("viewImage");
+
+            viewImage.onclick = function(event) {
+                event.preventDefault();
+                modal.style.display = "block";
+                modalImg.src = img.src;
+            }
+
+            var span = document.getElementsByClassName("close")[0];
+
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+        </script>
+    </div> <!-- End of main-wrapper div -->
+
+    {% else %}
+    <script>
+        window.onload = function() {
+            window.location.href = "{{ url_for('admin_signin') }}";
+        }
+    </script>
+    {% endif %}
+
+    <!-- Required scripts -->
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/owlcarousel/owl.carousel.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

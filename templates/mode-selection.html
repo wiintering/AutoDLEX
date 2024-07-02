@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Capture and Text Extraction</title>
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+            <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.jpg') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='index-css/bootstrap.min.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='index-css/animate.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='index-css/dataTables.bootstrap4.min.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='plugins/fontawesome/css/fontawesome.min.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='plugins/fontawesome/css/all.min.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='index-css/style.css') }}">
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<!-- Added Camera Feature-->
+<body >
+    <div id="global-loader">
+        <div class="whirly-loader">AutoDlex<i class="fa fa-camera" aria-hidden="true"></i></div>
+    </div>
+            <div class="contentarea">
+                {% if session.loggedins %}         
+                <div style="background-color:#2578F4 ;" class="header d-flex justify-content-end">
+                <ul class="nav" style="margin-top:-20px">                     
+                <li class="nav-item dropdown has-arrow main-drop">
+                    <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
+                        <span class="user-img"><img src="static/img/profiles/avator1.jpg" alt="">                               
+                    </a>
+
+                    <div class="dropdown-menu menu-drop-user">
+                        <div class="profilename">
+                            <div class="profileset">
+                                <span class="user-img"><img src="static/img/profiles/avator1.jpg" alt="">
+                                    <span class="status online"></span></span>
+                                <div class="profilesets">
+                                    <h6>{{ username }}</h6>
+                                    <h5>Enforcer</h5>
+                                </div>
+                            </div>
+                            <hr class="m-0">
+                            <a class="dropdown-item logout pb-0" href="{{ url_for('logout') }}" ><img
+                                    src="static/img/icons/log-out.svg" class="me-2" alt="img">Logout</a>
+                        </div>
+                    </div>
+                </li>
+                    </ul>
+                </div> 
+                
+       
+        
+                
+                {% if msg == "There is an unsettled violation for this data." %}
+                <script>
+                    swal({
+                        title: "Alert",
+                        text: "{{ msg }}",
+                        icon: "warning",
+                        button: "OK"
+                    });
+                </script>
+            {% elif msg == "Report Submitted Successfully!" %}
+                <script>
+                    swal({
+                        title: "Success",
+                        text: "{{ msg }}",
+                        icon: "success",
+                        button: "OK"
+                    });
+                </script>
+            {% endif %}
+            
+            
+            
+
+        {% else %}
+        <script>
+        window.onload = function() {
+            window.location.href = "{{ url_for('enforcer.enforcer') }}";
+        }
+    </script>
+        {% endif %}
+    </div>
+   
+    <div class="mode container"  >
+        <div class="justify-content-center">
+            <img src="static/images/choices.png" height="300" width="300">
+         </div>
+         <h3 class="h3 mb-3 " style="font-size: 20px;">Choose Data Entry Method!</h3>
+        <button class="btn btn-lg btn-primary btn-block mb-4 license" type="button" onclick="redirectTo('license-scanner')">License Scanner</button>
+        <button class="btn btn-lg btn-primary btn-block mb-4 manual" type="button" onclick="redirectTo('manual-input')">Manual Input</button>
+        <button class="btn btn-lg btn-primary btn-block mb-4 enforcer" type="button" onclick="redirectTo('no_license')">No License</button>
+    </div>
+    
+    <style>
+        .mode {
+            margin-top: 80px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            display: flex;
+        }
+    
+        .license, .manual, .enforcer {
+            width: 30%;
+            margin: 10px;
+        }
+    
+        @media (max-width: 768px) {
+            .license, .manual, .enforcer {
+                width: 50%;
+            }
+        }
+    
+        @media (max-width: 480px) {
+            .license, .manual, .enforcer {
+                width: 80%;
+            }
+        }
+    
+        @media (max-width: 320px) {
+            .license, .manual, .enforcer {
+                width: 100%;
+            }
+        }
+
+        
+    </style>
+
+     <script> 
+        function redirectTo(userType) {
+                  var url;
+                  if (userType === 'license-scanner') {
+                      url = "{{ url_for('camera') }}"; // Redirect to enforcer route
+                  } else if (userType === 'manual-input') {
+                      url = "{{ url_for('manual_input') }}"; // Redirect to admin route
+                  } else if (userType ==='no_license'){
+                    url = "{{ url_for('no_license') }}"; 
+                  }
+                  else {
+                      console.error("Invalid user type:", userType);
+                      return;
+                  }
+          
+                  console.log("Redirecting to:", url);
+                  window.location.href = url;
+              }
+        </script>
+        
+        <script>
+            document.getElementById("submit").addEventListener("click", 
+            function() {
+            var capturedImage = document.getElementById("capturedImage").src;
+            var extractedText = document.getElementById("extractedText").innerHTML;
+
+            document.getElementById("extracted_text").value = extractedText;
+            document.getElementById("image_data").value = capturedImage;
+        });
+        </script>
+
+          <script src="{{ url_for('static', filename='javascript/camera.js') }}"></script>
+          <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+  
+          <script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
+  
+          <script src="{{ url_for('static', filename='js/jquery.slimscroll.min.js') }}"></script>
+  
+          <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+          <script src="{{ url_for('static', filename='js/dataTables.bootstrap4.min.js') }}"></script>
+  
+          <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  
+          <script src="{{ url_for('static', filename='plugins/apexchart/apexcharts.min.js') }}"></script>
+          <script src="{{ url_for('static', filename='plugins/apexchart/chart-data.js') }}"></script>
+  
+          <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

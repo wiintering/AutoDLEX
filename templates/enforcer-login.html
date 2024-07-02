@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.6">
+    <title>AutoDlex - Santa Rosa Government</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/sign-in/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet"  crossorigin="anonymous">
+
+    <style>
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="static/css/signin.css" rel="stylesheet">
+  </head>
+  <body>
+    <form class="form-signin" action="{{ url_for('enforcer.enforcer') }}" method="post" style="background-color: white; padding: 50px; max-width: 500px; border-radius: 10px;" onsubmit="return validateForm()">
+      <div class="enforcer-logo" style="margin-top: -90px;">
+        <img src="static/images/CTMEU_LOGO.png" alt="" width="200" height="240">
+      </div>
+      <h1 style="color: blue; margin-top: -50px;" class="text-center">AutoDLEX</h1>
+      <p style="color:black" class="text-center">Enforcer Log in</p>
+      {% if msg %}
+        <div class="alert alert-danger">
+          {{msg}}
+        </div>
+      {% endif %}
+      <div class="form-group">
+        <label for="Username" style="color: black">Username<span style="color:red"> *</span></label>
+        <input type="text" id="Username" name="username" class="form-control" placeholder="Username" maxlength="50" required autofocus>
+        <div id="emailError" style="color: red;"></div>
+      </div>
+      <div class="form-group">
+        <label for="password" style="color: black">Password<span style="color:red"> *</span></label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+        <div id="passwordError" style="color: red;"></div>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" name="submit" type="submit">Sign in</button>
+      <p style="margin-bottom: -23px;" class="text-center">By using this service, you understand and agree to the AutoDLEX <span style="color: blue">Terms and Conditions</span></p>
+      <!-- <a href="{{url_for('interface')}}"><u style="color: white;"> Back </u></a> -->
+    </form>
+
+    <script>
+      function validateForm() {
+        // Clear previous error messages
+        document.getElementById('emailError').textContent = '';
+        document.getElementById('passwordError').textContent = '';
+
+        // Get input values
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        // Email validation regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        let isValid = true;
+
+        // Validate email
+        if (!emailRegex.test(email)) {
+          document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+          isValid = false;
+        }
+
+        // Validate password (minimum 6 characters for this example)
+        if (password.length < 6) {
+          document.getElementById('passwordError').textContent = 'Password must be at least 6 characters long.';
+          isValid = false;
+        }
+
+        return isValid;
+      }
+    </script>
+    <style>
+      /* Example of signin.css */
+      @media (max-width: 576px) {
+        .form-signin {
+          padding: 10px;
+        }
+      }
+    </style>
+  </body>
+</html>

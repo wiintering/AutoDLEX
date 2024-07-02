@@ -1,0 +1,212 @@
+{% include 'include_assets/styles.html' %}
+
+
+<body>
+    <div id="global-loader">
+        <div class="whirly-loader">AutoDlex<i class="fa fa-camera" aria-hidden="true"></i></div>
+    </div>
+    
+    {% if session.loggedin %}
+    <div class="main-wrapper">
+
+    {% include 'include_assets/profile.html'%}
+
+
+    <div class="sidebar" id="sidebar" style="background-color:  white;">
+        <div class="sidebar-inner slimscroll" >
+            <div id="sidebar-menu" class="sidebar-menu">
+                <div class="dashboard-logo">
+                    <a href="{{url_for('index')}}">
+                        <img src="static/images/autodlex.png" alt="" style="width: 200px; height: auto; margin-bottom: 80px;">
+                    </a>
+                </div>
+                <ul >
+                    <li >
+                        <a href="{{ url_for('index') }}"><span class="fa fa-home"></span><span>
+                                Dashboard</span> </a>
+                    </li>
+                         <li class="active">
+                        <a href="{{ url_for('violators.violator_list') }}">
+                            <span class="fa fa-user-alt"></span>
+                            <span> Violators List</span>
+                        </a>
+                    </li>
+                    <li >
+                    <a href="{{ url_for('enforcer.enforcer_data') }}">
+                        <span class="fa fa-user-alt"></span>
+                            <span> Enforcers</span>
+                        </a>
+                    </li>
+                    <li >
+                    <a href="{{ url_for('settled_reports') }}">
+                        <span class="fas fa-exclamation-circle"></span>
+                            <span  > Settled Reports</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+        <div class="page-wrapper">
+            <div class="content">
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="{{ url_for('violators.violator_list') }}">Violator List</a></li>
+                      <li class="breadcrumb-item active" aria-current="page">Edit Violators Details</li>
+                    </ol>
+                  </nav>
+                <form action="{{url_for('violators.edit_violators_data')}}"  method="POST" style="box-shadow:2px 5px 7px rgba(0, 0, 0, 0.3);"  > 
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6 " style="display: none;">
+                                <div class="form-group">
+                                    <label> <a style="color: red;">* </a>Violation</label>
+                                    <input type="text" name="violators_id"  value="{{violator_data.0}}">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label><a style="color: red;">* </a>Violation</label> 
+                                    <input type="text" name="violation" class="form-control" onkeydown="return false" value="{{violator_data.4  }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 " >
+                                <div class="form-group">
+                                    <label><a style="color: red;">* </a>Plate Number</label>
+                                    <input type="text" name="plateNumber" maxlength="7" required pattern="[a-zA-Z0-9]\S*.*" oninvalid="this.setCustomValidity('Plate Number should not start with a space')" oninput="setCustomValidity('')" value="{{violator_data.8}}">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label><a style="color: red;">* </a>Date</label> 
+                                    <input type="text" name="date" class="form-control" onkeydown="return false" value="{{violator_data.6}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label><a style="color: red;">* </a>Time</label>
+                                    <input type="text" name="time" class="form-control" value="{{ violator_data.5 }}" readonly>
+                                </div>
+                            </div> 
+                            <div class="col-sm-6">                                                 
+                                <div class="form-group">
+                                    <label for="inputVehicleType"><span style="color: red;">* </span>Vehicle Type</label>
+                                    <select name="vehicle" class="form-control" id="inputVehicleType" required>
+                                        <option value="" disabled selected>Select</option>
+                                        <option value="Motorcycle" {% if violator_data.9 == "Motorcycle" %} selected {% endif %}>Motorcycle</option>
+                                        <option value="Jeep" {% if violator_data.9 == "Jeep" %} selected {% endif %}>Jeep</option>
+                                        <option value="Tricycle" {% if violator_data.9 == "Tricycle" %} selected {% endif %}>Tricycle</option>
+                                        <option value="Van" {% if violator_data.9 == "Van" %} selected {% endif %}>Van</option>
+                                        <option value="Pickup" {% if violator_data.9 == "Pickup" %} selected {% endif %}>Pickup</option>
+                                        <option value="Car" {% if violator_data.9 == "Car" %} selected {% endif %}>Car</option>
+                                        <option value="Bus" {% if violator_data.9 == "Bus" %} selected {% endif %}>Bus</option>
+                                        <option value="Truck" {% if violator_data.9 == "Truck" %} selected {% endif %}>Truck</option>
+                                        <option value="SUV" {% if violator_data.9 == "SUV" %} selected {% endif %}>SUV</option>
+                                        <option value="Minivan" {% if violator_data.9 == "Minivan" %} selected {% endif %}>Minivan</option>
+                                        <option value="Sedan" {% if violator_data.9 == "Sedan" %} selected {% endif %}>Sedan</option>
+                                        <option value="Hatchback" {% if violator_data.9 == "Hatchback" %} selected {% endif %}>Hatchback</option>
+                                        <option value="Station Wagon" {% if violator_data.9 == "Station Wagon" %} selected {% endif %}>Station Wagon</option>
+                                        <option value="Forklift" {% if violator_data.9 == "Forklift" %} selected {% endif %}>Forklift</option>
+                                    </select>
+                                </div>
+                                    
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label><a style="color: red;">* </a>Status</label>
+                                    <select name="status" class="form-control">
+                                        <option value="settled" {% if violator_data.10 == "Settled" %} selected {% endif %}>Settled</option>
+                                        <option value="unsettled" {% if violator_data.10 == "Unsettled" %} selected {% endif %}>Unsettled</option>
+                                    </select>
+                                </div>
+                            </div>                           
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label><a style="color: red;">* </a>Barangay</label>
+                                    <select name="barangay" id="inputBarangay" class="form-control" required>
+                                        <option value="" disabled>Choose Barangay</option>
+                                        <option value="Balibago" {% if violator_data.7 == "Balibago" %} selected {% endif %}>Balibago</option>
+                                        <option value="Caingin" {% if violator_data.7 == "Caingin" %} selected {% endif %}>Caingin</option>
+                                        <option value="Dila" {% if violator_data.7 == "Dila" %} selected {% endif %}>Dila</option>
+                                        <option value="Dita" {% if violator_data.7 == "Dita" %} selected {% endif %}>Dita</option>
+                                        <option value="Don Jose" {% if violator_data.7 == "Don Jose" %} selected {% endif %}>Don Jose</option>
+                                        <option value="Ibaba" {% if violator_data.7 == "Ibaba" %} selected {% endif %}>Ibaba</option>
+                                        <option value="Kanluran" {% if violator_data.7 == "Kanluran" %} selected {% endif %}>Kanluran</option>
+                                        <option value="Labas" {% if violator_data.7 == "Labas" %} selected {% endif %}>Labas</option>
+                                        <option value="Macabling" {% if violator_data.7 == "Macabling" %} selected {% endif %}>Macabling</option>
+                                        <option value="Malitlit" {% if violator_data.7 == "Malitlit" %} selected {% endif %}>Malitlit</option>
+                                        <option value="Market Area" {% if violator_data.7 == "Market Area" %} selected {% endif %}>Market Area</option>
+                                        <option value="Poblacion" {% if violator_data.7 == "Poblacion" %} selected {% endif %}>Poblacion</option>
+                                        <option value="Santo Domingo" {% if violator_data.7 == "Santo Domingo" %} selected {% endif %}>Santo Domingo</option>
+                                        <option value="Sinalhan" {% if violator_data.7 == "Sinalhan" %} selected {% endif %}>Sinalhan</option>
+                                        <option value="Tagapo" {% if violator_data.7 == "Tagapo" %} selected {% endif %}>Tagapo</option>
+                                    </select>
+                                </div>
+                            </div>
+                                         
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit btn-sm me-2" name="submit">Update</button>
+                                <a href="{{url_for('violators.violator_list')}}" class="btn btn-cancel">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+   <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+<!-- Include other JavaScript files -->
+<script>
+    $(document).ready(function() {
+        // Store the initial form state
+        var initialFormState = $('form').serialize();
+    
+        // Function to show confirmation dialog when leaving the page
+        function beforeUnloadHandler(e) {
+            // If the current form state is different from the initial state
+            var currentFormState = $('form').serialize();
+            if (currentFormState !== initialFormState) {
+                // Customize the confirmation message
+                var confirmationMessage = 'You have unsaved changes. Are you sure you want to leave this page?';
+                
+                // For all browsers except Microsoft Edge
+                e.returnValue = confirmationMessage;
+                return confirmationMessage;
+            }
+        }
+    
+        window.addEventListener('beforeunload', beforeUnloadHandler);
+    
+        // Function to remove event listener when submitting the form
+        $('form').submit(function() {
+            // Remove the beforeunload event listener
+            window.removeEventListener('beforeunload', beforeUnloadHandler);
+        });
+    });
+</script>
+
+{% else %}
+<script>
+window.onload = function() {
+    window.location.href = "{{ url_for('admin_signin') }}";
+}
+</script>
+{% endif %}
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/sweetalert/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/sweetalert/sweetalerts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

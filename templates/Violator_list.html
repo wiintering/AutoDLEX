@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Other head elements -->
+    {% include 'include_assets/styles.html' %}
+</head>
+<body>
+    {% if session.loggedin %}
+    <div id="global-loader">
+        <div class="whirly-loader">AutoDlex<i class="fa fa-camera" aria-hidden="true"></i></div>
+    </div>
+    
+    <div class="main-wrapper">
+        {% include 'include_assets/profile.html'%}
+        <div class="sidebar" id="sidebar" style="background-color:  white;">
+            <div class="sidebar-inner slimscroll">
+                <div id="sidebar-menu" class="sidebar-menu">
+                    <div class="dashboard-logo">
+                        <a href="{{url_for('index')}}">
+                            <img src="static/images/autodlex.png" alt="" style="width: 200px; height: auto; margin-bottom: 80px;">
+                        </a>
+                    </div>
+                    <ul>
+                        <li>
+                            <a href="{{ url_for('index') }}"><span class="fa fa-home"></span><span>Dashboard</span></a>
+                        </li>
+                        <li class="active">
+                            <a href="{{ url_for('violators.violator_list') }}">
+                                <span class="fa fa-user-alt"></span>
+                                <span> Violators List</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('enforcer.enforcer_data') }}">
+                                <span class="fa fa-user-alt"></span>
+                                <span>Enforcers</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('settled_reports') }}">
+                                <span class="fas fa-exclamation-circle"></span>
+                                <span>Settled Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-wrapper">
+            <div class="content">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h4>Violator List</h4>
+                    </div>
+                </div>
+                <div class="card" style="box-shadow:2px 5px 7px rgba(0, 0, 0, 0.3);">              
+                    <div class="card-body">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                          <div class="alert-container">
+                            <ul class="alert">
+                              {% for category, message in messages %}
+                                <li class="alert alert-{{ category }}">
+                                  {{ message }}
+                                  <button  id="close" class="close" onclick="closeAlert(this)" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                        {% endif %}
+                      {% endwith %}
+                      
+                      
+                      <script>
+                        function closeAlert(element) {
+  var alertElement = element.closest('.alert'); // Find the closest .alert container
+  if (alertElement) {
+    alertElement.remove(); // Remove the alert from the DOM
+  }
+}
+                      </script>
+                        <div class="table-top">
+                            <div class="search-set">
+                                <div class="search-input">
+                                    <a class="btn btn-searchset"><img src="static/img/icons/search-white.svg" alt="img"></a>
+                                </div>
+                            </div>
+                            <div class="wordset">
+                                <a class="me-3">
+                                    <img src="static/img/icons/edit.svg" alt="img" onclick="editViolation()">
+                                </a>
+                                <a class="me-3">
+                                    <img src="static/img/icons/eye.svg" alt="img" onclick="viewViolator()">
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="card" id="filter_inputs">
+                            <div class="card-body pb-0">
+                                <div class="row">
+                                    <div class="col-lg-2 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <input type="text" placeholder="Enter User Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <input type="text" placeholder="Enter Phone">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <input type="text" placeholder="Enter Email">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <input type="text" class="datetimepicker cal-icon" placeholder="Choose Date">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <select class="select">
+                                                <option>Disable</option>
+                                                <option>Enable</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1 col-sm-6 col-12 ms-auto">
+                                        <div class="form-group">
+                                            <a class="btn btn-filters ms-auto"><img src="static/img/icons/search-whites.svg" alt="img"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table datanew">
+                                <thead>
+                                    <tr>
+                                       <th>Time</th>
+                                        <th>Violation</th>
+                                        <th>Plate Number</th>
+                                        <th>Date</th>
+                                        <th>Barangay</th>
+                                        <th>Vehicle Type</th>
+                                        <th>Status</th>
+                                        <th>
+                                            <div class="d-flex justify-content-center" style="margin-left:20px">
+                                                <input type="checkbox" id="selectAll" onclick="togglecheckboxes()">
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in violators %}
+                                    <tr>
+                                        <td>{{row.5}}</td>
+                                        <td class="ellipsis">{{row.4}}</td>
+                                        <td>{{row.8}}</td>
+                                        <td>{{row.6}}</td>
+                                        <td>{{row.7}}</td>
+                                        <td>{{row.9}}</td>
+                                        <td><span class="bg-lightred badges">{{row.10}}</span></td>
+                                        <td>
+                                            <div class="d-flex justify-content-center">
+                                                <input type="checkbox" class="rowCheckbox" value="{{row.0}}">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <script>
+        window.onload = function() {
+            window.location.href = "{{ url_for('admin_signin') }}";
+        }
+    </script>
+    {% endif %}
+
+    <script>
+        function togglecheckboxes() {
+            var checkboxes = document.querySelectorAll('.rowCheckbox');
+            var selectAllcheckbox = document.getElementById('selectAll');
+
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllcheckbox.checked;
+            });
+        }
+
+        function editViolation() {
+            var checkboxes = document.querySelectorAll('.rowCheckbox');
+            var editIds = Array.from(checkboxes).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
+
+            if (editIds.length > 1) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select only one row to edit',
+                });
+            } else if (editIds.length === 1) {
+                var editId = editIds[0];
+                window.location.href = "{{ url_for('violators.edit_violators_data', violator_id='') }}" + editId;
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select a row to edit',
+                });
+            }
+        }
+
+        function viewViolator() {
+            var checkboxes = document.querySelectorAll('.rowCheckbox');
+            var viewIds = Array.from(checkboxes).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
+
+            if (viewIds.length > 1) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select only one row to view',
+                });
+            } else if (viewIds.length === 1) {
+                var viewId = viewIds[0];
+                window.location.href = "{{ url_for('violators.view_violators_data', violator_id='') }}" + viewId;
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select a row to view',
+                });
+            }
+        }
+
+       
+       
+    </script>
+  
+
+    <style>
+        .ellipsis {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px; /* Adjust the width as needed */
+        }
+        .alert-container {
+  margin: 10px 0;
+}
+
+.alert {
+  list-style-type: none;
+  padding: 0;
+}
+
+.alert li {
+  margin: 5px 0;
+  padding: 5px 10px; /* Reduce padding */
+  font-size: 14px; /* Reduce font size */
+  border-radius: 3px; /* Slightly reduce border radius */
+  position: relative;
+}
+
+.alert .close {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 12px; /* Reduce font size of the close button */
+
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+#close{
+    background-color:  #d4edda;
+    border-color: #d4edda ;
+    border-top-color: #d4edda;
+    border-bottom-color: #d4edda ;
+    border-left-color: #d4edda ;
+    border-right-color: #d4edda ;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+    </style>
+
+    <script data-cfasync="false" src="{{ url_for('static', filename='js/email-decode.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/sweetalert/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/sweetalert/sweetalerts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    
+</body>
+</html>
